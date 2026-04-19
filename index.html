@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Football</title>
+    <title>Football | CRUD Edition</title>
     <link rel="icon" type="image/jpeg" href="https://i.pinimg.com/736x/98/c1/80/98c1805f69c2ebb120e3079236045fc6.jpg">
     <style>
         /* ================= THEME VARIABLES ================= */
@@ -14,6 +14,7 @@
             --glass-border: rgba(255, 255, 255, 0.15);
             --nav-bg: rgba(0, 0, 0, 0.4);
             --accent: #e63946;
+            --success: #2a9d8f;
         }
 
         body.light-mode {
@@ -48,8 +49,7 @@
 
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 4px; height: 4px;
             background: rgba(255,255,255,0.6);
             border-radius: 50%;
             opacity: 0.8;
@@ -62,22 +62,16 @@
             100% { transform: translateY(-1000px) translateX(50px); opacity: 0; }
         }
 
-        /* ================= NAVBAR (GLASS) ================= */
+        /* ================= NAVBAR ================= */
         nav {
             background: var(--nav-bg);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5em;
-            padding: 1em 0;
+            top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+            gap: 1.5em; padding: 1em 0;
             border-bottom: 1px solid var(--glass-border);
-            transition: background 0.4s ease;
         }
 
         nav a {
@@ -99,147 +93,97 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.8em;
-            transition: 0.3s;
         }
 
-        #theme-toggle:hover { transform: scale(1.05); }
+        /* ================= HERO & CARDS ================= */
+        #home { padding-top: 150px; text-align: center; padding-bottom: 80px; position: relative; z-index: 1; }
 
-        /* ================= HERO ================= */
-        #home {
-            padding-top: 150px;
-            text-align: center;
-            padding-bottom: 80px;
-            position: relative;
-        }
+        h1 { font-size: 4em; text-shadow: 0 0 30px rgba(230,57,70,0.6); letter-spacing: 3px; }
 
-        #home::before {
-            content: "";
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(230,57,70,0.4) 0%, transparent 70%);
-            top: -200px;
-            left: -200px;
-            z-index: -1;
-        }
-
-        h1 {
-            font-size: 4em;
-            text-shadow: 0 0 30px rgba(230,57,70,0.6);
-            letter-spacing: 3px;
-        }
-
-        /* ================= GLASS CARDS ================= */
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.8em;
-            padding: 20px 40px;
+            gap: 1.8em; padding: 20px 40px;
         }
 
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 1.5em;
-            text-align: left;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            transition: 0.4s ease;
             opacity: 0;
             transform: translateY(30px);
+            transition: 0.4s ease;
         }
 
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0px);
-            transition: 0.8s ease-out;
+        .card.visible { opacity: 1; transform: translateY(0px); transition: 0.8s ease-out; }
+
+        .card img { width: 100%; border-radius: 15px; margin-top: 10px; cursor: pointer; }
+
+        /* ================= CRUD SECTION ================= */
+        #roster-section {
+            padding: 60px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 0 40px rgba(230,57,70,0.5);
-        }
-
-        .card img {
-            width: 100%;
-            border-radius: 15px;
-            margin-top: 10px;
-            transition: 0.4s;
-        }
-
-        .card img:hover { transform: scale(1.05); }
-
-        /* ================= IMAGE MODAL ================= */
-        #imgModal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+        .crud-box {
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            justify-content: center;
-            align-items: center;
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 2.5em;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        #imgModal img {
-            max-width: 85%;
-            max-height: 85%;
-            border-radius: 20px;
+        .input-group {
+            display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;
         }
 
-        /* ================= FOOTER ================= */
-        footer {
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            padding: 2em 0;
-            margin-top: 50px;
-            border-top: 1px solid var(--glass-border);
-            transition: background 0.4s ease;
+        input {
+            flex: 1; padding: 12px; border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.1);
+            color: var(--text-color);
         }
 
-        /* ================= THEME RIPPLE ================= */
-        #theme-ripple {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            pointer-events: none;
-            transform: scale(0);
-            z-index: 3000;
-        }
+        .btn-main { background: var(--success); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .btn-edit { background: #457b9d; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .btn-delete { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
 
-        #theme-ripple.active {
-            animation: rippleEffect 0.6s ease-out forwards;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid var(--glass-border); }
 
-        @keyframes rippleEffect {
-            to { transform: scale(150); opacity: 0; }
+        /* ================= MODAL & MISC ================= */
+        #imgModal {
+            display: none; position: fixed; z-index: 2000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            justify-content: center; align-items: center;
         }
+        #imgModal img { max-width: 80%; border-radius: 20px; }
+
+        #theme-ripple { position: fixed; width: 20px; height: 20px; border-radius: 50%; pointer-events: none; transform: scale(0); z-index: 3000; }
+        #theme-ripple.active { animation: rippleEffect 0.6s ease-out forwards; }
+        @keyframes rippleEffect { to { transform: scale(150); opacity: 0; } }
+
+        #sources { padding: 40px; text-align: center; }
+        footer { background: var(--nav-bg); padding: 2em; text-align: center; border-top: 1px solid var(--glass-border); }
     </style>
 </head>
 <body>
 
-    <!-- PARTICLES -->
     <div id="particles"></div>
-
-    <!-- IMAGE MODAL -->
-    <div id="imgModal" onclick="closeImg()">
-        <img id="modalImg">
-    </div>
-
-    <!-- RIPPLE DIV -->
+    <div id="imgModal" onclick="closeImg()"><img id="modalImg"></div>
     <div id="theme-ripple"></div>
 
     <nav>
-        <a href="https://b2029coadelacruz.github.io/Q4-PROJECT/">HOME</a>
-        <a href="https://kskdheksnd.github.io/ROSTER/">ROSTER</a>
-        <a href="https://kskdheksnd.github.io/Overview/">OVERVIEW</a>
-        <a href="https://kskdheksnd.github.io/Players/">PLAYERS</a>
-        <a href="https://kskdheksnd.github.io/Training/">TRAINING & STATS</a>
-        <a href="https://kskdheksnd.github.io/Hall-of-Fame/">HALL OF FAME</a>
+        <a href="#home">HOME</a>
+        <a href="#roster-section">ROSTER</a>
+        <a href="#sources">SOURCES</a>
         <button id="theme-toggle">SWITCH MODE</button>
     </nav>
 
@@ -261,31 +205,45 @@
         </div>
     </section>
 
+    <section id="roster-section">
+        <div class="crud-box">
+            <h2 style="margin-top:0">Manage Your Squad</h2>
+            <div class="input-group">
+                <input type="hidden" id="edit-index">
+                <input type="text" id="p-name" placeholder="Player Name">
+                <input type="text" id="p-pos" placeholder="Position">
+                <button id="save-btn" class="btn-main">ADD TO SQUAD</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Position</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="player-rows"></tbody>
+            </table>
+        </div>
+    </section>
+
     <section id="sources">
         <h2>Sources</h2>
-            <p>All images and materials belong to their respective owners:</p>
-            <ul>
-            <li>Bulletin, B. T. R. S. T. T. I. (2021, August 16). Immokalee man inducted into hall of fame. Lake Okeechobee News.</li>
-            <li>Times, N. Y. (2014, June 15). How we play the game. The New York Times.</li>
-            <li>Baxter, K. (2025, December 6). How to buy tickets for the 2026 FIFA World Cup - Los Angeles Times.</li>
-            <li>Instagram.</li>
-            </ul>
-</section>
+        <ul style="list-style:none; padding:0; opacity:0.8">
+            <li>Bulletin, B. T. R. S. T. T. I. (2021). Lake Okeechobee News.</li>
+            <li>Times, N. Y. (2014). The New York Times.</li>
+            <li>Baxter, K. (2025). Los Angeles Times.</li>
+        </ul>
+    </section>
 
     <footer>
         <p>&copy; 2025 Football Project | LocalStorage Enabled</p>
     </footer>
 
     <script>
+        // --- ORIGINAL UI LOGIC ---
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
         const ripple = document.getElementById('theme-ripple');
 
-        // Load saved theme
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'light') body.classList.add('light-mode');
+        if (localStorage.getItem('theme') === 'light') body.classList.add('light-mode');
 
-        // Toggle with ripple animation
         themeToggle.addEventListener('click', (e) => {
             const rect = themeToggle.getBoundingClientRect();
             ripple.style.left = rect.left + rect.width / 2 + 'px';
@@ -299,17 +257,15 @@
             setTimeout(() => { ripple.classList.remove('active'); ripple.style.transform = 'scale(0)'; }, 600);
         });
 
-        // Modal functions
         function expandImg(img) {
             document.getElementById("imgModal").style.display = "flex";
             document.getElementById("modalImg").src = img.src;
         }
         function closeImg() { document.getElementById("imgModal").style.display = "none"; }
 
-        // ================= PARTICLE GENERATION =================
+        // Particles
         const particlesContainer = document.getElementById('particles');
-        const particleCount = 50;
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < 50; i++) {
             const p = document.createElement('div');
             p.classList.add('particle');
             p.style.left = Math.random() * window.innerWidth + 'px';
@@ -318,15 +274,67 @@
             particlesContainer.appendChild(p);
         }
 
-        // ================= SCROLL FADE-IN =================
-        const cards = document.querySelectorAll('.card');
+        // Intersection Observer for Cards
         const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
-        }, { threshold: 0.3 });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
-        cards.forEach(card => observer.observe(card));
+        // --- CRUD LOGIC ---
+        const nameInp = document.getElementById('p-name');
+        const posInp = document.getElementById('p-pos');
+        const saveBtn = document.getElementById('save-btn');
+        const editIdx = document.getElementById('edit-index');
+        const tableBody = document.getElementById('player-rows');
+
+        let squad = JSON.parse(localStorage.getItem('squad')) || [];
+
+        function render() {
+            tableBody.innerHTML = '';
+            squad.forEach((p, i) => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${p.pos}</td>
+                        <td>
+                            <button class="btn-edit" onclick="prepEdit(${i})">Edit</button>
+                            <button class="btn-delete" onclick="removeP(${i})">Delete</button>
+                        </td>
+                    </tr>`;
+            });
+            localStorage.setItem('squad', JSON.stringify(squad));
+        }
+
+        saveBtn.onclick = () => {
+            const player = { name: nameInp.value, pos: posInp.value };
+            if (!player.name || !player.pos) return alert("Fill everything!");
+
+            if (editIdx.value === "") {
+                squad.push(player); // Create
+            } else {
+                squad[editIdx.value] = player; // Update
+                editIdx.value = "";
+                saveBtn.innerText = "ADD TO SQUAD";
+                saveBtn.style.background = "var(--success)";
+            }
+            nameInp.value = ""; posInp.value = "";
+            render();
+        };
+
+        window.prepEdit = (i) => {
+            nameInp.value = squad[i].name;
+            posInp.value = squad[i].pos;
+            editIdx.value = i;
+            saveBtn.innerText = "UPDATE PLAYER";
+            saveBtn.style.background = "#f4a261";
+            window.scrollTo(0, document.getElementById('roster-section').offsetTop - 100);
+        };
+
+        window.removeP = (i) => {
+            if(confirm("Release player?")) { squad.splice(i, 1); render(); }
+        };
+
+        render();
     </script>
 </body>
 </html>
